@@ -1,0 +1,41 @@
+.dividends-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.dividends-view vaadin-grid {
+  height: 100%;
+}
+
+.dividends-view .row-item-horizontal-layout {
+  align-items: center;
+  theme: "spacing";
+}
+
+.dividends-view .row-item-vertical-layout {
+  line-height: var(--lumo-line-height-m);
+  gap: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.dividends-view .row-item-name {
+  font-size: var(--lumo-font-size-s);
+  color: var(--lumo-secondary-text-color);
+}
+
+.dividends-view .button-layout {
+  width: 100%;
+  flex-wrap: wrap;
+  background-color: var(--lumo-contrast-5pct);
+  padding-bottom: var(--lumo-space-s);
+  padding-top: var(--lumo-space-s);
+  padding-left: var(--lumo-space-l);
+  padding-right: var(--lumo-space-l);
+  gap: var(--lumo-space-m);
+}
+
+.dividends-view .grid-wrapper {
+  width: 100%;
+}

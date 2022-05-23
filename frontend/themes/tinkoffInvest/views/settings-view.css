@@ -1,0 +1,9 @@
+.settings-view {
+  display: block;
+  margin: 0 auto;
+  padding: 0 var(--lumo-space-l);
+}
+.settings-view .button-layout {
+  margin-bottom: var(--lumo-space-l);
+  margin-top: var(--lumo-space-m);
+}

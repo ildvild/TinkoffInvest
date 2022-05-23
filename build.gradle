@@ -1,7 +1,15 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		maven { setUrl("https://maven.vaadin.com/vaadin-prereleases") }
+		maven { setUrl("https://maven.vaadin.com/vaadin-addons") }
+	}
+}
+
 plugins {
 	id 'org.springframework.boot' version '2.6.7'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'com.vaadin' version '0.14.6.0'
+	id 'com.vaadin'
 	id 'java'
 }
 
@@ -15,19 +23,30 @@ configurations {
 	}
 }
 
+defaultTasks("clean", "build")
+
 repositories {
 	mavenCentral()
-}
-
-ext {
-	set('vaadinVersion', "23.0.8")
+	maven { setUrl("https://maven.vaadin.com/vaadin-prereleases") }
+	maven { setUrl("https://maven.vaadin.com/vaadin-addons") }
 }
 
 dependencies {
-	implementation 'com.vaadin:vaadin-spring-boot-starter'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	//Lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	//Tinkoff
+	implementation "ru.tinkoff.piapi:java-sdk-core:${tinkoffSdkVersion}"
+
+	//Vaadin
+	implementation 'com.vaadin:vaadin-spring-boot-starter'
+
+	//Telegram
+	implementation "org.telegram:telegrambots-spring-boot-starter:${telegramBotApiVersion}"
 }
 
 dependencyManagement {
