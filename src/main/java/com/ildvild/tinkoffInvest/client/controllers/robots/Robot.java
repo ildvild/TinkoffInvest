@@ -1,6 +1,7 @@
 package com.ildvild.tinkoffInvest.client.controllers.robots;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ public class Robot {
     private String accountId;
     private String name;
     private String description;
+    @EqualsAndHashCode.Exclude
     private State state;
 
     public boolean isWorking() {

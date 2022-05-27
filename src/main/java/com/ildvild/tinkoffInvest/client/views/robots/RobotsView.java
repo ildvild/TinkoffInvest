@@ -78,7 +78,7 @@ public class RobotsView extends Div implements BeforeEnterObserver {
         grid.setHeight("100%");
         grid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS, GridVariant.LUMO_ROW_STRIPES);
         grid.addColumn("name").setHeader("Имя").setSortable(true).setAutoWidth(true);
-        //grid.addColumn(new ComponentRenderer<>(Span::new, statusComponentUpdater)).setHeader("Статус").setSortable(true);
+        grid.addColumn(new ComponentRenderer<>(Span::new, statusComponentUpdater)).setHeader("Статус").setSortable(true);
 
         grid.setItems(robotsController.getRobots());
 
@@ -102,6 +102,7 @@ public class RobotsView extends Div implements BeforeEnterObserver {
             robotsController.start(robot);
             run.setEnabled(robot.isStopped());
             stop.setEnabled(robot.isWorking());
+            grid.getDataProvider().refreshItem(robot);
             Notification.show("Робот [" + robot.getName() + "] запущен!");
         });
 
@@ -110,6 +111,7 @@ public class RobotsView extends Div implements BeforeEnterObserver {
             robotsController.stop(robot);
             run.setEnabled(robot.isStopped());
             stop.setEnabled(robot.isWorking());
+            grid.getDataProvider().refreshItem(robot);
             Notification.show("Робот [" + robot.getName() + "] остановлен!");
         });
     }
@@ -186,10 +188,6 @@ public class RobotsView extends Div implements BeforeEnterObserver {
         editorLayoutDiv.setEnabled(false);
         grid.select(null);
         account.setValue(null);
-    }
-
-    private void clearForm() {
-        populateForm(null);
     }
 
     private void populateForm(Robot value) {
