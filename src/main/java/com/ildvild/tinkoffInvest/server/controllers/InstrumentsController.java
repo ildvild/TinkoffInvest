@@ -4,9 +4,11 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.ildvild.tinkoffInvest.server.TinkoffInvestConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.piapi.contract.v1.Instrument;
+import ru.tinkoff.piapi.core.InvestApi;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -15,12 +17,12 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class InstrumentsController {
 
-    private final TinkoffInvestController investController;
+    private final InvestApi investApi;
 
     private final LoadingCache<String, Instrument> cache;
 
-    public InstrumentsController(TinkoffInvestController investController) {
-        this.investController = investController;
+    public InstrumentsController(InvestApi investApi) {
+        this.investApi = investApi;
         cache = CacheBuilder.newBuilder()
                 .expireAfterWrite(30, TimeUnit.DAYS)
                 .build(
@@ -28,7 +30,7 @@ public class InstrumentsController {
                             @Override
                             public Instrument load(String key) throws Exception {
                                 log.info("Загрузка информации об инструменте для {}", key);
-                                return investController.getInvestApi().getInstrumentsService().getInstrumentByFigiSync(key);
+                                return investApi.getInstrumentsService().getInstrumentByFigiSync(key);
                             }
 
                             @Override

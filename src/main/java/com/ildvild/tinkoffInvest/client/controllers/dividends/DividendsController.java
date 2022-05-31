@@ -1,12 +1,13 @@
 package com.ildvild.tinkoffInvest.client.controllers.dividends;
 
+import com.ildvild.tinkoffInvest.client.controllers.TinkoffInvestController;
 import com.ildvild.tinkoffInvest.client.controllers.positions.Instrument;
 import com.ildvild.tinkoffInvest.server.controllers.InstrumentsController;
-import com.ildvild.tinkoffInvest.server.controllers.TinkoffInvestController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+import ru.tinkoff.piapi.core.InvestApi;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +24,7 @@ public class DividendsController {
 
     private final com.ildvild.tinkoffInvest.server.controllers.DividendsController serverDividendsController;
     private final com.ildvild.tinkoffInvest.server.controllers.InstrumentsController instrumentsController;
+    private final InvestApi investApi;
     private final TinkoffInvestController tinkoffInvestController;
 
     @Value("${tickerIconFormatUrl}")
@@ -30,9 +32,11 @@ public class DividendsController {
 
     public DividendsController(com.ildvild.tinkoffInvest.server.controllers.DividendsController serverDividendsController,
                                InstrumentsController instrumentsController,
+                               InvestApi investApi,
                                TinkoffInvestController tinkoffInvestController) {
         this.serverDividendsController = serverDividendsController;
         this.instrumentsController = instrumentsController;
+        this.investApi = investApi;
         this.tinkoffInvestController = tinkoffInvestController;
     }
 

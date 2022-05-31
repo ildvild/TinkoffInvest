@@ -1,5 +1,7 @@
 package com.ildvild.tinkoffInvest.server.controllers;
 
+import com.ildvild.tinkoffInvest.client.controllers.TinkoffInvestController;
+import com.ildvild.tinkoffInvest.server.TinkoffInvestConfiguration;
 import com.ildvild.tinkoffInvest.server.robots.AbstractRobot;
 import com.ildvild.tinkoffInvest.server.robots.exceptions.RobotStateException;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Component;
 import ru.tinkoff.piapi.contract.v1.Candle;
 import ru.tinkoff.piapi.contract.v1.MarketDataResponse;
 import ru.tinkoff.piapi.contract.v1.SubscriptionInterval;
+import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.stream.MarketDataStreamService;
 import ru.tinkoff.piapi.core.stream.MarketDataSubscriptionService;
 import ru.tinkoff.piapi.core.stream.StreamProcessor;
@@ -27,10 +30,12 @@ public class CandlesController {
 
     private final List<AbstractRobot> robots;
 
-    public CandlesController(TinkoffInvestController investController, List<AbstractRobot> robots) {
-        this.marketDataStreamService = investController.getInvestApi().getMarketDataStreamService();
+    public CandlesController(InvestApi investApi,
+                             TinkoffInvestController tinkoffInvestController,
+                             List<AbstractRobot> robots) {
+        this.marketDataStreamService = investApi.getMarketDataStreamService();
         this.robots = robots;
-        createStream(investController.getFigies(), robots);
+        createStream(tinkoffInvestController.getFigies(), robots);
     }
 
     private void createStream(List<String> figies, List<AbstractRobot> robots) {

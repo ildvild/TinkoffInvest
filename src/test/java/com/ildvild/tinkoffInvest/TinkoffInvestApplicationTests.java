@@ -1,7 +1,7 @@
 package com.ildvild.tinkoffInvest;
 
 import com.ildvild.tinkoffInvest.server.controllers.HistoricCandlesController;
-import com.ildvild.tinkoffInvest.server.controllers.TinkoffInvestController;
+import com.ildvild.tinkoffInvest.server.TinkoffInvestConfiguration;
 import com.ildvild.tinkoffInvest.server.robots.BazaarRobot;
 import com.ildvild.tinkoffInvest.server.robots.BuyAverageAndSell;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TinkoffInvestApplicationTests {
 
     @Autowired
-    private TinkoffInvestController tinkoffInvestController;
+    private TinkoffInvestConfiguration tinkoffInvestController;
 
     @Autowired
     private HistoricCandlesController historicCandlesController;

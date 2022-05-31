@@ -6,12 +6,14 @@ import ru.tinkoff.piapi.contract.v1.OrderState;
 import ru.tinkoff.piapi.contract.v1.OrderTrades;
 import ru.tinkoff.piapi.contract.v1.Quotation;
 import ru.tinkoff.piapi.contract.v1.TradesStreamResponse;
+import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.OrdersService;
 import ru.tinkoff.piapi.core.stream.OrdersStreamService;
 import ru.tinkoff.piapi.core.stream.StreamProcessor;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -26,17 +28,25 @@ import static ru.tinkoff.piapi.core.utils.MapperUtils.bigDecimalToQuotation;
 @Component
 public class OrdersController {
 
-    private OrdersService ordersService;
-    private OrdersStreamService ordersStreamService;
+    private final InvestApi investApi;
+    private final SandboxController sandboxController;
+    private final OrdersService ordersService;
+    private final OrdersStreamService ordersStreamService;
 
-    public OrdersController(TinkoffInvestController investController) {
-        this.ordersService = investController.getInvestApi().getOrdersService();
-        this.ordersStreamService = investController.getInvestApi().getOrdersStreamService();
+    public OrdersController(InvestApi investApi, SandboxController sandboxController) {
+        this.investApi = investApi;
+        this.sandboxController = sandboxController;
+        this.ordersService = investApi.getOrdersService();
+        this.ordersStreamService = investApi.getOrdersStreamService();
     }
 
     public List<OrderState> getOrders(String accountId) {
         log.info("Получение заявок по счету {}", accountId);
-        return ordersService.getOrdersSync(accountId);
+        if (!sandboxController.isEnabled()) {
+            return ordersService.getOrdersSync(accountId);
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     public void postBuyOrder(String accountId, String figi, long quantity, BigDecimal price) {
@@ -66,13 +76,23 @@ public class OrdersController {
 
     public void cancelOrder(String accountId, String orderId) {
         log.info("Отмена заявки {} по счету {}", accountId);
-        Instant time = ordersService.cancelOrderSync(accountId, orderId);
+        Instant time = null;
+        if (!sandboxController.isEnabled()) {
+            time = ordersService.cancelOrderSync(accountId, orderId);
+        } else {
+            time = sandboxController.cancelOrderSync(accountId, orderId);
+        }
         log.info("Заявка {} отменена в {}", orderId, time);
     }
 
     public void cancelAllOrders(String accountId) {
         log.info("Отмена всех заявок по счету {}", accountId);
-        List<OrderState> orders = ordersService.getOrdersSync(accountId);
+        List<OrderState> orders = null;
+        if (!sandboxController.isEnabled()) {
+            orders = ordersService.getOrdersSync(accountId);
+        } else {
+            orders = sandboxController.getOrdersSync(accountId);
+        }
         orders.forEach(o -> cancelOrder(accountId, o.getOrderId()));
     }
 

@@ -5,10 +5,12 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.ildvild.tinkoffInvest.server.TinkoffInvestConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.piapi.contract.v1.Dividend;
+import ru.tinkoff.piapi.core.InvestApi;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class DividendsController {
 
     @Autowired
-    private TinkoffInvestController investController;
+    private InvestApi investApi;
 
     private final LoadingCache<String, List<Dividend>> cache;
 
@@ -38,7 +40,7 @@ public class DividendsController {
                                 List<Dividend> result = new ArrayList<>();
                                 Instant from = Instant.now();
                                 Instant to = from.plus(100, DAYS);
-                                return investController.getInvestApi().getInstrumentsService().getDividendsSync(key, from, to);
+                                return investApi.getInstrumentsService().getDividendsSync(key, from, to);
                             }
 
                             @Override

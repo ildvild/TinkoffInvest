@@ -1,6 +1,7 @@
 package com.ildvild.tinkoffInvest.client.controllers.Account;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -20,9 +21,9 @@ public class AccountsController {
         this.serverAccountsController = serverAccountsController;
     }
 
-    private Account convert( ru.tinkoff.piapi.contract.v1.Account account) {
+    private Account convert(ru.tinkoff.piapi.contract.v1.Account account) {
         Account a = new Account();
-        a.setName(account.getName());
+        a.setName(StringUtils.isNotEmpty(account.getName()) ? account.getName() : account.getId());
         a.setId(account.getId());
         a.setStatus(account.getStatusValue());
         a.setOpenedDate(timestampToInstant(account.getOpenedDate()));

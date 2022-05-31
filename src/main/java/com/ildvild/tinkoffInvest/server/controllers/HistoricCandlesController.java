@@ -4,11 +4,13 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.ildvild.tinkoffInvest.server.TinkoffInvestConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.piapi.contract.v1.HistoricCandle;
+import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.MarketDataService;
 
 import java.time.Instant;
@@ -33,8 +35,8 @@ public class HistoricCandlesController {
     @Value("${candleCacheLoadDays}")
     private int candleCacheLoadDays;
 
-    public HistoricCandlesController(TinkoffInvestController investController) {
-        MarketDataService marketDataService = investController.getInvestApi().getMarketDataService();
+    public HistoricCandlesController(InvestApi investApi) {
+        MarketDataService marketDataService = investApi.getMarketDataService();
         cacheDay = CacheBuilder.newBuilder()
                 .expireAfterWrite(7, TimeUnit.DAYS)
                 .build(
